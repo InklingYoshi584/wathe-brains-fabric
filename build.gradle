@@ -16,6 +16,17 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	
+	maven {
+		url "https://maven.carpetmod.org/"
+	}
+	maven {
+		url "https://maven.terraformersmc.com/releases/"
+	}
+	// Wathe - built locally
+	maven {
+		url "file:${rootProject.rootDir}/../Wathe/build/libs"
+	}
 }
 
 loom {
@@ -39,6 +50,26 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
+	// Carpet (fake players for AI)
+	modImplementation "carpetmod:carpet:${project.carpet_version}"
+	
+	// Simple Voice Chat (for TTS audio broadcasting)
+	modImplementation "de.maxhenkel.voicechat:simple-voice-chat-api:${project.voicechat_version}"
+	
+	// CCA (Cardinal Components API)
+	modImplementation "dev.onyxstudios:cca-api:${project.cca_version}"
+	
+	// Wathe (game mod) - include locally built jar
+	// modImplementation "dev.doctor4t:wathe:${project.wathe_version}"
+	
+	// Gson for JSON serialization
+	implementation "com.google.code.gson:gson:2.10.1"
+	
+	// Apache HTTP Client for LLM requests
+	implementation "org.apache.httpcomponents.client5:httpclient5:5.2.1"
+	
+	// Fabric Language Kotlin (if needed)
+	// modImplementation "net.fabricmc:fabric-language-kotlin:${project.kotlin_version}"
 }
 
 processResources {

@@ -1,41 +1,33 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "wathe-brains",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "WatheBrains AI",
+	"description": "AI mod for Harpy Express - Adds LLM-powered AI players (killers, vigilantes, civilians)",
 	"authors": [
-		"Me!"
+		"InklingYoshi584"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/InklingYoshi584/wathe-brains-fabric",
+		"sources": "https://github.com/InklingYoshi584/wathe-brains-fabric"
 	},
-	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"license": "MIT",
+	"icon": "assets/wathe-brains/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
-		],
-		"client": [
-			"com.example.ExampleModClient"
+			"online.inklingyoshi.brains.WatheBrains"
 		]
 	},
-	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
-	],
+	"mixins": [],
 	"depends": {
 		"fabricloader": ">=0.18.2",
-		"minecraft": "~1.21.11",
+		"minecraft": "~1.21.1",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"carpet": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+		"simple-voice-chat": "*"
 	}
 }
