@@ -65,10 +65,10 @@ public class AiActionExecutor {
         ServerPlayerEntity player = ai.getPlayer();
         if (player == null || decision.message == null) return;
         
-        player.getServer().getPlayerManager().broadcast(
-            net.minecraft.text.Text.literal(decision.message),
-            net.minecraft.message.MessageType.CHAT,
-            player.getUuid()
+        // Send chat message - simplified for 1.21.1
+        // Using server to broadcast - will show as system message
+        player.getServer().getPlayerManager().getPlayerList().forEach(p -> 
+            p.sendMessage(net.minecraft.text.Text.literal(decision.message))
         );
         
         System.out.println("[WatheBrains] AI " + player.getName().getString() + " chats: " + decision.message);

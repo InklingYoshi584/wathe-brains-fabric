@@ -131,7 +131,9 @@ public class WatheApi {
     }
 
     public static BlockPos findNearestBed(ServerPlayerEntity player) {
-        return findNearestBlock(player, net.minecraft.block.Blocks.BED, 30);
+        // Note: BED block lookup needs registry in 1.21.1
+        // return findNearestBlock(player, net.minecraft.block.Blocks.RED_BED, 30);
+        return null; // TODO: Fix bed lookup
     }
 
     public static BlockPos findNearestBlock(ServerPlayerEntity player, Block targetBlock, double radius) {

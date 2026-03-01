@@ -1,5 +1,5 @@
 plugins {
-	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom-remap' version '1.14-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -12,28 +12,41 @@ base {
 
 repositories {
 	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
-	
+    // You should only use this when depending on other mods because
+    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	maven {
-		url "https://maven.carpetmod.org/"
+		url 'https://masa.dy.fi/maven'
 	}
 	maven {
-		url "https://maven.terraformersmc.com/releases/"
-	}
-	// Wathe - built locally
-	maven {
-		url "file:${rootProject.rootDir}/../Wathe/build/libs"
-	}
+		url 'https://maven.quiltmc.org/repository/release/'
+    }
+    maven {
+        name = "Ladysnake Mods"
+        url = 'https://maven.ladysnake.org/releases'
+    }
+    maven {
+        name 'Xander Maven'
+        url 'https://maven.isxander.dev/releases'
+    }
+    maven {
+        url "https://maven.uuid.gg/releases"
+        name "Datasync"
+    }
+    maven { url = uri('https://maven.maxhenkel.de/releases') }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"modid" {
+		"wathebrains" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
@@ -41,35 +54,51 @@ loom {
 
 }
 
+fabricApi {
+	configureDataGeneration {
+		client = true
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.officialMojangMappings()
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
-	// Carpet (fake players for AI)
-	modImplementation "carpetmod:carpet:${project.carpet_version}"
+	// Carpet mod for fake players
+	modImplementation "carpet:fabric-carpet:${project.carpet_version}"
 	
-	// Simple Voice Chat (for TTS audio broadcasting)
-	modImplementation "de.maxhenkel.voicechat:simple-voice-chat-api:${project.voicechat_version}"
+	// Simple Voice Chat API for TTS
+	modImplementation "de.maxhenkel.voicechat:voicechat-api:${project.voicechat_api_version}"
 	
-	// CCA (Cardinal Components API)
-	modImplementation "dev.onyxstudios:cca-api:${project.cca_version}"
+	// Wathe mod
+	modImplementation "dev.doctor4t:wathe:1.3.2-1.21.1"
 	
-	// Wathe (game mod) - include locally built jar
-	// modImplementation "dev.doctor4t:wathe:${project.wathe_version}"
-	
-	// Gson for JSON serialization
+	// CCA (Cardinal Components)
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+    modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+    modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-world:${project.cca_version}"
+    modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-scoreboard:${project.cca_version}"
+    
+    // YACL (Yet Another Config Lib)
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+    
+    // Ratatouille (for Wathe item registration)
+    modImplementation "dev.doctor4t:ratatouille:${project.ratatouille_version}"
+    
+	runtimeOnly 'maven.modrinth:midnightlib:1.7.5+1.21.1-fabric'
+    modRuntimeOnly "maven.modrinth:simple-voice-chat:fabric-${voicechat_version}"
+    modRuntimeOnly "de.maxhenkel.voicechat:voicechat-api:${voicechat_api_version}:fabric-stub"
+
+    // Gson for JSON serialization
 	implementation "com.google.code.gson:gson:2.10.1"
 	
 	// Apache HTTP Client for LLM requests
 	implementation "org.apache.httpcomponents.client5:httpclient5:5.2.1"
-	
-	// Fabric Language Kotlin (if needed)
-	// modImplementation "net.fabricmc:fabric-language-kotlin:${project.kotlin_version}"
 }
 
 processResources {
@@ -85,11 +114,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
-
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
 }
@@ -102,20 +127,11 @@ jar {
 	}
 }
 
-// configure the maven publication
 publishing {
 	publications {
 		create("mavenJava", MavenPublication) {
 			artifactId = project.archives_base_name
 			from components.java
 		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
 	}
 }

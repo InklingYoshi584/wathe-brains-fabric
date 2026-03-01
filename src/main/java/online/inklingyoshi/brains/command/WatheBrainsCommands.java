@@ -81,17 +81,17 @@ public class WatheBrainsCommands {
         var source = ctx.getSource();
         source.sendFeedback(() -> net.minecraft.text.Text.literal("=== WatheBrains AI List ==="), true);
         
-        long count = 0;
+        int[] count = {0};
         for (AiProfile profile : AiManager.getAiProfiles()) {
             String info = String.format("- %s | Role: %s | InGame: %s",
                 profile.getPlayer() != null ? profile.getPlayer().getName().getString() : profile.getUuid(),
                 profile.getRole(),
                 profile.isInGame());
             source.sendFeedback(() -> net.minecraft.text.Text.literal(info), true);
-            count++;
+            count[0]++;
         }
-        source.sendFeedback(() -> net.minecraft.text.Text.literal("Total: " + count + " AI(s)"), true);
-        return (int) count;
+        source.sendFeedback(() -> net.minecraft.text.Text.literal("Total: " + count[0] + " AI(s)"), true);
+        return count[0];
     }
 
     private static int spawnAi(CommandContext<ServerCommandSource> ctx, String role) {
@@ -177,7 +177,7 @@ public class WatheBrainsCommands {
                 for (var p : server.getPlayerManager().getPlayerList()) {
                     if (!AiManager.isAiName(p.getName().getString()) && WatheApi.isAliveAndSurvival(p)) {
                         WatheApi.grenadeKill(p, player);
-                        source.sendFeedback(() -> net.minecraft.text.Literal("§aGrenaded " + p.getName().getString() + "!"), true);
+                        source.sendFeedback(() -> net.minecraft.text.Text.literal("§aGrenaded " + p.getName().getString() + "!"), true);
                         break;
                     }
                 }
@@ -239,18 +239,15 @@ public class WatheBrainsCommands {
                 }
             }
             case "chat_hello" -> {
-                player.getServer().getPlayerManager().broadcast(
-                    net.minecraft.text.Text.literal("Hello everyone!"),
-                    net.minecraft.message.MessageType.CHAT,
-                    player.getUuid()
+                // Send chat message - simplified
+                player.getServer().getPlayerManager().getPlayerList().forEach(p -> 
+                    p.sendMessage(net.minecraft.text.Text.literal("Hello everyone!"))
                 );
                 source.sendFeedback(() -> net.minecraft.text.Text.literal("§aAI said hello!"), true);
             }
             case "chat_sus" -> {
-                player.getServer().getPlayerManager().broadcast(
-                    net.minecraft.text.Text.literal("That guy looks suspicious..."),
-                    net.minecraft.message.MessageType.CHAT,
-                    player.getUuid()
+                player.getServer().getPlayerManager().getPlayerList().forEach(p -> 
+                    p.sendMessage(net.minecraft.text.Text.literal("That guy looks suspicious..."))
                 );
                 source.sendFeedback(() -> net.minecraft.text.Text.literal("§aAI said someone is sus!"), true);
             }

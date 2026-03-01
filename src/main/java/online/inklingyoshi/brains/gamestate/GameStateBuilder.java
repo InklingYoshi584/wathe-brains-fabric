@@ -97,12 +97,12 @@ public class GameStateBuilder {
 
     private static List<GameState.PlayerInfo> buildPlayerList(AiProfile ai, ServerPlayerEntity self, MinecraftServer server) {
         List<GameState.PlayerInfo> players = new ArrayList<>();
-        ServerPlayerEntity[] playersArray = server.getPlayerManager().getPlayerList();
+        var playersList = server.getPlayerManager().getPlayerList();
         Vec3d selfPos = self.getPos();
         
         boolean isKiller = ai.getRole().equals("killer");
         
-        for (ServerPlayerEntity other : playersArray) {
+        for (ServerPlayerEntity other : playersList) {
             if (other.getUuid().equals(self.getUuid())) continue;
             
             GameState.PlayerInfo info = new GameState.PlayerInfo();

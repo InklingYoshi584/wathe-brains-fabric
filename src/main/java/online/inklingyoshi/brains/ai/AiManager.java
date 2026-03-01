@@ -64,12 +64,15 @@ public class AiManager {
     public static void removeProfile(UUID uuid) { AI_PROFILES.remove(uuid); }
 
     public static void spawnAi(MinecraftServer server, String role, int index) {
-        String name = switch (role.toLowerCase()) {
-            case "killer" -> KILLER_PREFIX + index;
-            case "vigilante" -> VIGILANTE_PREFIX + index;
-            case "civilian" -> CIVILIAN_PREFIX + index;
-            default -> { return; }
-        };
+        String name;
+        switch (role.toLowerCase()) {
+            case "killer" -> name = KILLER_PREFIX + index;
+            case "vigilante" -> name = VIGILANTE_PREFIX + index;
+            case "civilian" -> name = CIVILIAN_PREFIX + index;
+            default -> name = null;
+        }
+        
+        if (name == null) return;
         
         var commandSource = server.getCommandSource();
         server.getCommandManager().executeWithPrefix(commandSource, "player " + name + " spawn");

@@ -3,9 +3,13 @@ package online.inklingyoshi.brains;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import online.inklingyoshi.brains.command.WatheBrainsCommands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.server.command.ServerCommandSource;
 
 /**
  * WatheBrains - AI mod for Harpy Express
@@ -58,8 +62,9 @@ public class WatheBrains implements ModInitializer {
     }
 
     private void registerCommands() {
-        // Register commands via Fabric's command registry
-        net.fabricmc.fabric.api.event.registry.CommandRegistryCallback.eagerlyRegister(dispatcher -> {
+        // Commands will be registered on server start
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            var dispatcher = server.getCommandManager().getDispatcher();
             WatheBrainsCommands.register(dispatcher);
         });
     }
